@@ -1,0 +1,25 @@
+{
+  "name": "helsinki-blog-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Javiergonb/Helsinki-Blog-Project.git"
+  },
+  "author": "Javier Gonzalez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Javiergonb/Helsinki-Blog-Project/issues"
+  },
+  "homepage": "https://github.com/Javiergonb/Helsinki-Blog-Project#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mongoose": "^8.11.0"
+  }
+}
