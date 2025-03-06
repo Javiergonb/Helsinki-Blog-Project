@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "node --watch index.js",
-    "test": "node --test"
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
     "mongoose": "^8.11.0"
   },
   "devDependencies": {
-    "lodash": "^4.17.21"
+    "cross-env": "^7.0.3",
+    "lodash": "^4.17.21",
+    "supertest": "^7.0.0"
   }
 }
