@@ -20,12 +20,12 @@ beforeEach(async () => {
     await blogObject.save()
 })
 
-test.only('there are 2 blogs', async () => {
+test('there are 2 blogs', async () => {
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
-test.only('id is returned instead of _id', async () => {
+test('id is returned instead of _id', async () => {
     const response = await api.get('/api/blogs')
 
 
@@ -36,7 +36,7 @@ test.only('id is returned instead of _id', async () => {
 })
 
 
-test.only('adding a blog is possible', async () => {
+test('adding a blog is possible', async () => {
     const newBlog = {
         author: 'Sonic',
         title: 'How to go fast',
@@ -57,7 +57,7 @@ test.only('adding a blog is possible', async () => {
 
 })
 
-test.only('likes default to 0', async () => {
+test('likes default to 0', async () => {
     const newBlog = {
         author: 'Knuckles',
         title: 'The art of punching stuff',
@@ -75,7 +75,7 @@ test.only('likes default to 0', async () => {
 
 })
 
-test.only('title must be included', async () => {
+test('title must be included', async () => {
     const newBlog = {
         author: 'Tails',
         url: 'www.hello.com',
@@ -91,7 +91,7 @@ test.only('title must be included', async () => {
 
 })
 
-test.only('url must be included', async () => {
+test('url must be included', async () => {
     const newBlog = {
         author: 'Tails',
         title: 'how to fly',
@@ -107,7 +107,7 @@ test.only('url must be included', async () => {
 
 })
 
-test.only('can delete a particular blog', async () => {
+test('can delete a particular blog', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
@@ -124,7 +124,7 @@ test.only('can delete a particular blog', async () => {
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
 })
 
-test.only('can update a blog', async() => {
+test('can update a blog', async() => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
 
@@ -203,7 +203,88 @@ describe('when there is initially one user in db', () => {
     
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)
       })
+
+      test('creation fails if username is not at least 3 characters long', async () => {
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            username: 'ro',
+            name: 'hello',
+            password: 'salainen',
+          }
+
+          const result = await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
+
+          const usersAtEnd = await helper.usersInDb()
+          assert(result.body.error.includes('is shorter than the minimum allowed length'))
+
+          assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+      })
+
+      test('creation fails if username is not given ', async () => {
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            name: 'hello',
+            password: 'salainen',
+          }
+        const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        assert(result.body.error.includes('Path `username` is required'))
+
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+
+
+      })
+
+      test('creation fails if password is not at least 3 characters long', async () => {
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            username: 'root',
+            name: 'hello',
+            password: 'sa',
+          }
+
+          const result = await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
+
+          const usersAtEnd = await helper.usersInDb()
+          assert(result.body.error.includes('Password must be at least 3 characters long'))
+
+          assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+      })
+
+      test('creation fails if password is not given ', async () => {
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            username: 'root',
+            name: 'hello',
+          }
+        const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        assert(result.body.error.includes('Password is required'))
+       
+
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+      })
+      
   })
+
 
 
 after(async () => {
